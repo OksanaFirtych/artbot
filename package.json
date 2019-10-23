@@ -1,0 +1,15 @@
+{
+  "name": "artbot",
+  "version": "1.0.0",
+  "description": "telegram bot for TUASH art group",
+  "main": "index.js",
+  "repository": "https://github.com/OksanaFirtych/artbot.git",
+  "author": "Oksana Firtych <oxana.firtych@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "firebase": "^7.2.1",
+    "liqpay": "^0.0.1",
+    "node-telegram-bot-api": "^0.40.0",
+    "open-graph-scraper": "^3.6.2"
+  }
+}
