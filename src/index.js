@@ -63,6 +63,7 @@ function startChat(msg) {
 }
 
 bot.onText(HANDLED_MESSAGES_REGS.START, (msg) => {
+    console.log('!!!!!!');
     startChat(msg);
 });
 
