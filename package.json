@@ -23,9 +23,5 @@
   },
   "engines": {
     "node": "10.x"
-  },
-  "scripts": {
-    "start": "node src/index.js",
-    "build": "node src/index.js"
   }
 }
