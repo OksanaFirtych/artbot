@@ -1,5 +1,6 @@
 /node_modules
 /public
-/src/config.json
+
+.env
 
 yarn-error.log

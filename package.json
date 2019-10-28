@@ -9,6 +9,7 @@
   "type": "commonjs",
   "dependencies": {
     "add": "^2.0.6",
+    "dotenv": "^8.2.0",
     "firebase": "^7.2.1",
     "global": "^4.4.0",
     "liqpay": "^0.0.1",

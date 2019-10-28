@@ -1,8 +1,38 @@
+require('dotenv').config();
+
 const TelegramBot = require('node-telegram-bot-api');
 const firebase = require('firebase');
-const config = require('./config.json'); //eslint-disable-line
+const {
+    bot: botToken,
+    liqpay_public_key,
+    liqpay_private_key,
+    admin_chat_id,
+    artbot_url,
+    apiKey,
+    authDomain,
+    databaseURL,
+    projectId,
+    storageBucket,
+    messagingSenderId,
+    appId,
+    measurementId,
+} = process.env;
+const firebaseConfig = {
+    apiKey,
+    authDomain,
+    databaseURL,
+    projectId,
+    storageBucket,
+    messagingSenderId,
+    appId,
+    measurementId,
+};
+
 const liqPayHelper = require('./liqpay_helper');
-const liqpay = liqPayHelper(config.liqpay);
+const liqpay = liqPayHelper({
+    public_key: liqpay_public_key,
+    private_key: liqpay_private_key,
+});
 
 const constants = require('./constants');
 const replace = require('lodash/replace');
@@ -13,11 +43,9 @@ const {
     CALLBACK_QUERIES,
     HANDLED_MESSAGES_REGS,
 } = constants;
+const bot = new TelegramBot(botToken, { polling: true });
 
-const token = config.bot;
-const bot = new TelegramBot(token, { polling: true });
-
-firebase.initializeApp(config.firebase);
+firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const ref = db.ref();
 const chatsRefs = ref.child('chats');
@@ -106,12 +134,12 @@ function initPayment(msg) {
                     transaction_id,
                     description
                 }) => {
-                    bot.sendMessage(config.admin_chat_id, `Успешный платеж ${transaction_id}. ${description}. Добавить в платный чат`);
+                    bot.sendMessage(admin_chat_id, `Успешный платеж ${transaction_id}. ${description}. Добавить в платный чат`);
                     updateSubscription(chatId, transaction_id);
                 },
                 onError: () => { },
                 onStrange: ({ transaction_id }) => {
-                    bot.sendMessage(config.admin_chat_id, `Проверь транзакцию ${transaction_id}. Странный статус`);
+                    bot.sendMessage(admin_chat_id, `Проверь транзакцию ${transaction_id}. Странный статус`);
                 }
             }
         );
@@ -142,7 +170,7 @@ bot.on('callback_query', (callbackQuery) => {
                 const chatId = callbackQuery.data.replace(`${CALLBACK_QUERIES.ADD_USER}_`, '');
                 bot.sendMessage(
                     chatId,
-                    `Спасибо за ожидание. Теперь вы можете перейти в основной канал ${config.artbot_url}`,
+                    `Спасибо за ожидание. Теперь вы можете перейти в основной канал ${artbot_url}`,
                 );
             }
             break;
@@ -271,11 +299,11 @@ function updateSubscription(chatId, paymentId) {
         const dateExpire = new Date(newSubscription.timestampExpired).toISOString().substr(0, 10);
         bot.sendMessage(chatId, `Подписка оплачена и будет действовать до ${dateExpire}`);
         if (!beforeUpdate.subscription) {
-            bot.sendMessage(chatId, `Перейдите по ссылке, чтобы присоединиться к каналу ${config.artbot_url}`);
+            bot.sendMessage(chatId, `Перейдите по ссылке, чтобы присоединиться к каналу ${artbot_url}`);
         } else if (beforeUpdate.subscription.timestampExpired < timestamp) {
             bot.sendMessage(chatId, 'Подождите пожалуйста. Когда администратор подтвердит ваше возвращение в канал, вам придет ссылка');
             bot.sendMessage(
-                config.admin_chat_id,
+                admin_chat_id,
                 `Убрать из черного списка ${beforeUpdate.chat.username}`,
                 {
                     reply_markup: {
