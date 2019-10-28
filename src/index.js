@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const firebase = require('firebase');
-const config = require('../config.json'); //eslint-disable-line
+const config = require('./config.json'); //eslint-disable-line
 const liqPayHelper = require('./liqpay_helper');
 const liqpay = liqPayHelper(config.liqpay);
 
@@ -109,7 +109,7 @@ function initPayment(msg) {
                     bot.sendMessage(config.admin_chat_id, `Успешный платеж ${transaction_id}. ${description}. Добавить в платный чат`);
                     updateSubscription(chatId, transaction_id);
                 },
-                onError: () => {},
+                onError: () => { },
                 onStrange: ({ transaction_id }) => {
                     bot.sendMessage(config.admin_chat_id, `Проверь транзакцию ${transaction_id}. Странный статус`);
                 }
@@ -184,7 +184,7 @@ function checkRegistrationStatus(msg, callback) {
                 chat.id,
                 'Примите лицензионное соглашение и зарегестрируйтесь, чтобы продолжить работу. Для этого напишите команду /start',
             );
-            setTimeout(startChat, 2000);
+            setTimeout(() => { startChat(msg); }, 2000);
             callback(false);
             return;
         }
@@ -293,7 +293,7 @@ function updateSubscription(chatId, paymentId) {
                 }
             );
         }
-        
+
     });
 }
 

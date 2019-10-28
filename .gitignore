@@ -1,3 +1,5 @@
 /node_modules
 /public
-config.json
+/src/config.json
+
+yarn-error.log
