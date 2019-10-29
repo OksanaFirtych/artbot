@@ -10,5 +10,6 @@ module.exports = {
     HANDLED_MESSAGES_REGS: {
         START: /\/start/,
         PAY: /\/pay/,
+        MY: /\/my/,
     }
 };

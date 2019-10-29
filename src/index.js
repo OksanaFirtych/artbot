@@ -235,6 +235,7 @@ function checkRegistrationStatus(msg, callback) {
         }
 
         callback(true);
+        return true;
     });
 }
 
@@ -265,6 +266,21 @@ bot.onText(HANDLED_MESSAGES_REGS.PAY, (msg) => {
             return;
         }
         initPayment(msg);
+    });
+});
+
+bot.onText(HANDLED_MESSAGES_REGS.MY, (msg) => {
+    checkRegistrationStatus(msg, (isRegistered) => {
+        if (!isRegistered) {
+            return;
+        }
+        chatsRefs.once('value', (snapshot) => {
+            const chatId = msg.chat.id;
+            const { subscription } = snapshot.val()[chatId];
+            const dateExpire = new Date(subscription.timestampExpired).toISOString().substr(0, 10);
+            console.log(dateExpire);
+            bot.sendMessage(chatId, `Подписка оплачена и будет действовать до ${dateExpire}`);
+        });
     });
 });
 
