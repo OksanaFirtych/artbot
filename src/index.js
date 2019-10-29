@@ -270,15 +270,20 @@ bot.onText(HANDLED_MESSAGES_REGS.PAY, (msg) => {
 });
 
 bot.onText(HANDLED_MESSAGES_REGS.MY, (msg) => {
+    const chatId = msg.chat.id;
     checkRegistrationStatus(msg, (isRegistered) => {
         if (!isRegistered) {
+            bot.sendMessage(chatId, `Вы не зарегестрированы`);
             return;
         }
         chatsRefs.once('value', (snapshot) => {
-            const chatId = msg.chat.id;
             const { subscription } = snapshot.val()[chatId];
-            const dateExpire = new Date(subscription.timestampExpired).toISOString().substr(0, 10);
-            console.log(dateExpire);
+            const timestampExpired = subscription.timestampExpired;
+            const dateExpire = new Date(timestampExpired).toISOString().substr(0, 10);
+            if (timestampExpired < new Date().getTime()) {
+                bot.sendMessage(chatId, `Ваша последняя подписка истекла ${dateExpire}`);
+                return;
+            }
             bot.sendMessage(chatId, `Подписка оплачена и будет действовать до ${dateExpire}`);
         });
     });
