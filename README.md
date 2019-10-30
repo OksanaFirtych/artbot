@@ -6,3 +6,7 @@ This part is dedicated to members subscription management. People can pay their 
 Also admin side is implemented here. Administrator of service will be notified about new paid members to add them to private channel.
 Bot is deployed to Heroku service.
 
+## bot configuration
+
+See .env.example file. Change all required field values and rename file as .env
+
