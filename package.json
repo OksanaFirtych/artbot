@@ -13,7 +13,7 @@
     "firebase": "^7.2.1",
     "global": "^4.4.0",
     "liqpay": "^0.0.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "node-telegram-bot-api": "^0.40.0",
     "now": "^16.4.0"
   },
